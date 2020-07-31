@@ -5,10 +5,6 @@
   [c1 c2 c3 c4 c5]
   (vec [c1 c2 c3 c4 c5]))
 
-(def pk (poker-hand "2H" "3S" "4C" "5C" "7D"))
-(def pk2 (poker-hand "TS" "AS" "QS" "KS" "JS"))
-(def pk3 (poker-hand "TS" "AS" "TS" "KS" "JS"))
-
 (def hands
   {:pair 1
    :two-pairs 2
@@ -20,11 +16,10 @@
    :straight-flush 8
    :royal-flush 9})
 
-
 (def rank-values
   (hash-map \T 10 \J 11 \Q 12 \K 13 \A 14))
 
-(defn rank ; first
+(defn rank
   "returns rank of the card"
   [card]
   (let [[x _] card]
@@ -32,7 +27,7 @@
       (Integer/valueOf (str x))
       (get rank-values x))))
 
-(defn suit ; SECOND
+(defn suit
   "returns suit of the card"
   [card]
   (let [[_ y] card]
@@ -43,8 +38,6 @@
   (if (some #(>= % number) (vals (frequencies (map rank poker-hand))))
     true
     false))
-
-;polimorfizm
 
 (defn pair?
   [poker-hand]
@@ -63,7 +56,7 @@
   [poker-hand]
   (apply = (map suit poker-hand)))
 
-(defn straight? ; chyba okej
+(defn straight?
   "5 sequential cards"
   [poker-hand]
   (let [ranks (map rank poker-hand)]
@@ -75,7 +68,7 @@
         (= (sort ranks) (range minimum (inc maximum)))))
      (= '(2 3 4 5 14) (sort ranks)))))
 
-(defn straight-flush? ; chyba dzialalaaaa
+(defn straight-flush?
   "5 sequential cards in the same suit"
   [poker-hand]
   (and
@@ -88,7 +81,7 @@
    (flush? poker-hand)
    (= '(10 11 12 13 14) (sort (map rank poker-hand)))))
 
-(defn two-pairs? ; chyba ok
+(defn two-pairs?
   [poker-hand]
   (or
    (= (count (filter #(>= % 2) (vals (frequencies (map rank poker-hand))))) 2)
