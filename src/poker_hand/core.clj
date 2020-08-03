@@ -34,6 +34,7 @@
     (str y)))
    
 (defn number-of-cards?
+  "returns true if there is given number of cards of the same rank"
   [number poker-hand]
   (if (some #(>= % number) (vals (frequencies (map rank poker-hand))))
     true
@@ -52,7 +53,7 @@
     (number-of-cards? 4 poker-hand))
  
 (defn flush?
-  "the same suit, znaczek "
+  "the same suit"
   [poker-hand]
   (apply = (map suit poker-hand)))
 
@@ -88,7 +89,7 @@
    (four-of-kind? poker-hand)))
 
 (defn full-house?
- "para i trojka" 
+ "pair and three-of-cards" 
   [poker-hand] 
    (= '(2 3) (sort (vals (frequencies (map rank poker-hand))))))
 
