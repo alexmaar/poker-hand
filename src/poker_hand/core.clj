@@ -5,7 +5,7 @@
   [c1 c2 c3 c4 c5]
   (vec [c1 c2 c3 c4 c5]))
 
-(def hands
+(def hand-type
   {:pair 1
    :two-pairs 2
    :three-of-kind 3
@@ -93,26 +93,63 @@
   [poker-hand] 
    (= '(2 3) (sort (vals (frequencies (map rank poker-hand))))))
 
+(defn high-card?
+  [poker-hand]
+  (apply max (map rank poker-hand)))
+
 (defn check-poker-hand
   [poker-hand]
   (cond
-    (royal-flush? poker-hand) (:royal-flush hands)
-    (straight-flush? poker-hand) (:straight-flush hands)
-    (four-of-kind? poker-hand) (:four-of-kind hands)
-    (full-house? poker-hand) (:full-house hands)
-    (flush? poker-hand) (:flush hands)
-    (straight? poker-hand) (:straight hands)
-    (three-of-kind? poker-hand) (:three-of-kind hands)
-    (two-pairs? poker-hand) (:two-pairs hands)
-    (pair? poker-hand) (:pair hands)
-    :else 0))
+    (royal-flush? poker-hand) (:royal-flush hand-type)
+    (straight-flush? poker-hand) (:straight-flush hand-type)
+    (four-of-kind? poker-hand) (:four-of-kind hand-type)
+    (full-house? poker-hand) (:full-house hand-type)
+    (flush? poker-hand) (:flush hand-type)
+    (straight? poker-hand) (:straight hand-type)
+    (three-of-kind? poker-hand) (:three-of-kind hand-type)
+    (two-pairs? poker-hand) (:two-pairs hand-type)
+    (pair? poker-hand) (:pair hand-type)
+    :else (high-card? poker-hand)))
+
+;; (defn compare-poker-hands
+;;   [ph1 ph2]
+;;   (if (> (check-poker-hand ph1) (check-poker-hand ph2))
+;;     1
+;;     0)
+;;   )
+
+(defn ties?
+  [ph1 ph2]
+  (let [ranks1 (rank ph1)
+        ranks2 (rank ph2)
+        sum1 (apply + ranks1)
+        sum2 (apply + ranks2)]
+    (if (> sum1 sum2)
+      1
+      0)  
+    ))
 
 (defn compare-poker-hands
   [ph1 ph2]
-  (if (> (check-poker-hand ph1) (check-poker-hand ph2))
-    1
-    0)
-  )
+  (let [type1 (check-poker-hand ph1)
+        type2 (check-poker-hand ph2)]
+    (cond
+      (> type1 type2) (str "win") 
+      (< type1 type2) (str "loss")
+      (= type1 type2) (if 
+                       (or 
+                        (= (:pair hand-type) type)
+                        (= (:three-of-kind hand-type) type)
+                        (= (:four-of-kind hand-type) type)
+                        (= (:straight hand-type) type)
+                        (= (:straight-flush hand-type) type))
+                        (ties? ph1 ph2)
+                        (cond
+                          (> (high-card? ph1) (high-card? ph2)) (str "win")
+                          (< (high-card? ph1) (high-card? ph2)) (str "loss")
+                          :else (str "ties"))))))
+
+
 
 (def normal                   ["2H" "3S" "4C" "5C" "7D"])
 (def pair                     ["2H" "2S" "4C" "5C" "7D"])
