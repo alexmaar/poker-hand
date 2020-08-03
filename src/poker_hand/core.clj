@@ -134,8 +134,8 @@
   (let [type1 (check-poker-hand ph1)
         type2 (check-poker-hand ph2)]
     (cond
-      (> type1 type2) (str "win") 
-      (< type1 type2) (str "loss")
+      (> type1 type2) :win 
+      (< type1 type2) :loss
       (= type1 type2) (if 
                        (or 
                         (= (:pair hand-type) type)
@@ -145,9 +145,9 @@
                         (= (:straight-flush hand-type) type))
                         (ties? ph1 ph2)
                         (cond
-                          (> (high-card? ph1) (high-card? ph2)) (str "win")
-                          (< (high-card? ph1) (high-card? ph2)) (str "loss")
-                          :else (str "ties"))))))
+                          (> (high-card? ph1) (high-card? ph2)) :win
+                          (< (high-card? ph1) (high-card? ph2)) :loss
+                          :else :ties)))))
 
 
 
